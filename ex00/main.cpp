@@ -4,6 +4,17 @@
 //int i = 10;
 //float f = static_cast<float>(i);
 
+int check_point(char *s)
+{
+	int i = -1;
+	while (s[++i])
+	{
+		if (s[i] == '.')
+			return (0);
+	}
+	return (1);
+}
+
 void char_case(char c)
 {
 	int i = static_cast<int>(c);
@@ -25,12 +36,17 @@ void cout_error(std::string s)
 int only_nums(char *s)
 {
 	int i = -1;
+	int x = 0;
 
+	while (s[++i])
+		if (s[i] == '.')
+			x = 1;
+	i = -1;
 	if (s[i + 1] == '-' || s[i + 1] == '+')
 		i++;
 	while (s[++i])
 	{
-		if (s[i] == 'f' && i > 2 && s[i - 2] == '.' && isdigit(s[i - 1]) && !s[i + 1])
+		if (s[i] == 'f' && i > 2 && x == 1 && isdigit(s[i - 1]) && !s[i + 1])
 			;
 		else if (!isdigit(s[i]) && s[i] != '.')
 			return (0);
@@ -99,10 +115,48 @@ void parsing(char *s)
 	if (strlen(s) == 3 && s[0] == 39 && s[2] == 39 && s[1] > 32 && s[1] < 127)
 		char_case(s[1]);
 	if (!check_over_one(s, '.') || !check_over_one(s, '-') || !check_over_one(s, '+') || !check_invalid_point(s) || !only_nums(s))
-		cout_error("Inalid input");
+		cout_error("Invalid input");
 }
 
+void cast_values(char *s)
+{
+	int i;
+	float f;
+	char c;
+	double d;
 
+	if (check_point(s))
+	{
+		i = atoi(s);
+		c = static_cast<int>(i);
+		f = static_cast<float>(i);
+		d = static_cast<double>(i);
+		if (c < 32 || c > 126)
+			std::cout << "char: Non displayable" << std::endl;
+		else
+			std::cout << "char: '" << c << "'" << std::endl;
+		std::cout << "int: " << i << std::endl;
+		std::cout << "float: " << f << ".0f" <<std::endl;
+		std::cout << "double: " << d << ".0" <<std::endl;
+		exit (0);
+	}
+	else
+	{
+		f = atof(s);
+		c = static_cast<int>(f);
+		i = static_cast<int>(f);
+		d = static_cast<double>(f);
+	}
+	//std::cout << i << std::endl;
+	if (c < 32 || c > 126)
+		std::cout << "char: Non displayable" << std::endl;
+	else
+		std::cout << "char: '" << c << "'" << std::endl;
+	std::cout << "int: " << i << std::endl;
+	std::cout << "float: " << f << "f" << std::endl;
+	std::cout << "double: " << d << std::endl;
+	exit (0); 
+}
 
 int main(int argc, char **argv)
 {
@@ -117,5 +171,5 @@ int main(int argc, char **argv)
 		return (-1);
 	}
 	parsing(argv[1]);
-	//cast_values(argv[1]);
+	cast_values(argv[1]);
 }
