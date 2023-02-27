@@ -122,40 +122,53 @@ void cast_values(char *s)
 {
 	int i;
 	float f;
-	char c;
+	char c = '\0';
 	double d;
 
-	if (check_point(s))
+	if (check_point(s) && ((strlen(s) == 10
+		&& (strncmp("2147483647", s, 11) < 0)) || (strlen(s) == 11 && 
+		strncmp("-2147483648", s, 12) < 0) || strlen(s) > 11))
 	{
-		i = atoi(s);
-		c = static_cast<int>(i);
-		f = static_cast<float>(i);
-		d = static_cast<double>(i);
-		if (c < 32 || c > 126)
-			std::cout << "char: Non displayable" << std::endl;
-		else
-			std::cout << "char: '" << c << "'" << std::endl;
-		std::cout << "int: " << i << std::endl;
-		std::cout << "float: " << f << ".0f" <<std::endl;
-		std::cout << "double: " << d << ".0" <<std::endl;
+		std::cout << "char: impossible" << std::endl;
+		std::cout << "int: impossible" << std::endl;
+		std::cout << "float: nanf" << std::endl;
+		std::cout << "double: nan" << std::endl;
 		exit (0);
 	}
-	else
+	else if (!check_point(s))
 	{
 		f = atof(s);
 		c = static_cast<int>(f);
 		i = static_cast<int>(f);
 		d = static_cast<double>(f);
+		
+		//(void)c;
+		//std::cout << test << "aaaa\n";
+		if (f < 32 || f > 126)
+			std::cout << "char: Non displayable" << std::endl;
+		else
+			std::cout << "char: '" << c << "'" << std::endl;
+		std::cout << "int: " << i << std::endl;
+		std::cout << "float: " << f << "f" << std::endl;
+		std::cout << "double: " << d << std::endl;
+		exit (0); 
 	}
-	//std::cout << i << std::endl;
-	if (c < 32 || c > 126)
-		std::cout << "char: Non displayable" << std::endl;
 	else
-		std::cout << "char: '" << c << "'" << std::endl;
-	std::cout << "int: " << i << std::endl;
-	std::cout << "float: " << f << "f" << std::endl;
-	std::cout << "double: " << d << std::endl;
-	exit (0); 
+	{
+		std::cout << s << std::endl;
+		i = atoi(s);
+		c = static_cast<int>(i);
+		f = static_cast<float>(i);
+		d = static_cast<double>(i);
+		if (i > 31 && i < 127)
+			std::cout << "char: '" << c << "'" << std::endl;
+		else
+			std::cout << "char: Non displayable" << std::endl;
+		std::cout << "int: " << i << std::endl;
+		std::cout << "float: " << f << ".0f" <<std::endl;
+		std::cout << "double: " << d << ".0" <<std::endl;
+		exit (0);
+	}
 }
 
 int main(int argc, char **argv)
