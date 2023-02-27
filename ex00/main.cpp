@@ -30,7 +30,9 @@ int only_nums(char *s)
 		i++;
 	while (s[++i])
 	{
-		if (!isdigit(s[i]) && s[i] != '.')
+		if (s[i] == 'f' && i > 2 && s[i - 2] == '.' && isdigit(s[i - 1]) && !s[i + 1])
+			;
+		else if (!isdigit(s[i]) && s[i] != '.')
 			return (0);
 	}
 	return (1);
@@ -100,6 +102,8 @@ void parsing(char *s)
 		cout_error("Inalid input");
 }
 
+
+
 int main(int argc, char **argv)
 {
 	// char res_c;
@@ -113,4 +117,5 @@ int main(int argc, char **argv)
 		return (-1);
 	}
 	parsing(argv[1]);
+	//cast_values(argv[1]);
 }
