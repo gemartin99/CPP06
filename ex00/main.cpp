@@ -22,6 +22,34 @@ void cout_error(std::string s)
 	exit (-1);
 }
 
+int only_nums(char *s)
+{
+	int i = -1;
+
+	if (s[i + 1] == '-' || s[i + 1] == '+')
+		i++;
+	while (s[++i])
+	{
+		if (!isdigit(s[i]) && s[i] != '.')
+			return (0);
+	}
+	return (1);
+}
+
+int check_invalid_point(char *s)
+{
+	int i = -1;
+
+	if (s[i + 1] == '.')
+		return (0);
+	while (s[++i])
+	{
+		if (s[i] == '.' && i > 0 && (!isdigit(s[i - 1]) || !isdigit(s[i + 1])))
+			return (0);
+	}
+	return (1);
+}
+
 int check_over_one(char *s, char c) //funcion para comprobar que cualquier letra que le pase solo pueda estar una vez dentro de la string
 {
 	int i = -1;
@@ -68,7 +96,7 @@ void parsing(char *s)
 	}
 	if (strlen(s) == 3 && s[0] == 39 && s[2] == 39 && s[1] > 32 && s[1] < 127)
 		char_case(s[1]);
-	if (!check_over_one(s, '.') || !check_over_one(s, '-') || !check_over_one(s, '+'))
+	if (!check_over_one(s, '.') || !check_over_one(s, '-') || !check_over_one(s, '+') || !check_invalid_point(s) || !only_nums(s))
 		cout_error("Inalid input");
 }
 
