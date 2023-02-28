@@ -1,8 +1,11 @@
 #include <string>
 #include <iostream>
+#include <cstring>
 
 //int i = 10;
 //float f = static_cast<float>(i);
+
+	//if (i == 10 && (strncmp("2147483647", t, 11) < 0) || (strlen(t) == 11 && strncmp("-2147483648", t, 12) < 0) || strlen(t) > 11))
 
 int check_point(char *s)
 {
@@ -10,7 +13,12 @@ int check_point(char *s)
 	while (s[++i])
 	{
 		if (s[i] == '.')
-			return (0);
+		{
+			if (i > 11 || (i == 10 && (strncmp("2147483647", s, i) < 0)) || (i == 11 && (strncmp("-2147483648", s, i) < 0)))
+				return (-1);
+			else
+				return (0);
+		}
 	}
 	return (1);
 }
@@ -118,6 +126,43 @@ void parsing(char *s)
 		cout_error("Invalid input");
 }
 
+int check_decimal(char *s)
+{
+	int j = 0;
+	int i = 0;
+	int c = 0;
+
+	while (s[j] != '.')
+		j++;
+	while(s[++i + j])
+	{
+		if (s[i] != '0' && s[i] != 'f')
+			c = 1;
+	}
+	i--;
+	if (s[i] == 'f')
+		i--;
+	if (i > 7 && i <= 15 && c == 1)
+		return (-1);
+	if (i > 15 && c == 1)
+		return (-2);
+	return (0);
+}
+
+int check_zero(char *s)
+{
+	int i = 0;
+
+	while (s[i] != '.')
+		i++;
+	while(s[++i])
+	{
+		if (s[i] != '0' && s[i] != 'f')
+			return (1);
+	}
+	return (0);
+}
+
 void cast_values(char *s)
 {
 	int i;
@@ -135,9 +180,18 @@ void cast_values(char *s)
 		std::cout << "double: nan" << std::endl;
 		exit (0);
 	}
+	if (check_point(s) == -1)
+	{
+		std::cout << "char: impossible" << std::endl;
+		std::cout << "int: impossible" << std::endl;
+		std::cout << "float: nanf" << std::endl;
+		std::cout << "double: nan" << std::endl;
+		exit (0);
+	}
 	else if (!check_point(s))
 	{
 		f = atof(s);
+		//double d = std::stod(s);
 		c = static_cast<int>(f);
 		i = static_cast<int>(f);
 		d = static_cast<double>(f);
@@ -149,13 +203,34 @@ void cast_values(char *s)
 		else
 			std::cout << "char: '" << c << "'" << std::endl;
 		std::cout << "int: " << i << std::endl;
-		std::cout << "float: " << f << "f" << std::endl;
-		std::cout << "double: " << d << std::endl;
+		if (!check_zero(s))
+		{
+			std::cout << "float: " << f << ".0f" <<std::endl;
+			std::cout << "double: " << d << ".0" <<std::endl;
+		}
+		else
+		{
+			int x = check_decimal(s);
+			if (x == -1)
+			{
+				std::cout << "float: Non displayable" << std::endl;
+				std::cout << "double: " << d << std::endl;
+			}
+			else if (x == -2)
+			{
+				std::cout << "float: Non displayable" << std::endl;
+				std::cout << "double: Non displayable" << std::endl;
+			}
+			else
+			{
+				std::cout << "float: " << f << "f" << std::endl;
+				std::cout << "double: " << d << std::endl;
+			}
+		}
 		exit (0); 
 	}
 	else
 	{
-		std::cout << s << std::endl;
 		i = atoi(s);
 		c = static_cast<int>(i);
 		f = static_cast<float>(i);
